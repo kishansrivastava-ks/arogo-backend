@@ -30,13 +30,14 @@ const corsOptions = {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
-app.use(cors(corsOptions));
-// app.use(
-//   cors({
-//     origin: process.env.FRONTEND_URL,
-//     credentials: true,
-//   })
-// );
+// app.use(cors(corsOptions));
+app.use(
+  cors({
+    origin: "https://arogo-ai-nu.vercel.app",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 app.use(cookieParser());
 app.use(morgan("dev"));
 
