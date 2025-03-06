@@ -18,7 +18,11 @@ connectDB();
 const app = express();
 
 const corsOptions = {
-  origin: ["http://localhost:3000", "http://localhost:5173"], // Allow both ports
+  origin: [
+    process.env.FRONTEND_URL,
+    "http://localhost:3000",
+    "http://localhost:5173",
+  ], // Allow both ports
   credentials: true, // Allows cookies/auth headers
 };
 
@@ -27,6 +31,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
 app.use(cors(corsOptions));
+// app.use(
+//   cors({
+//     origin: process.env.FRONTEND_URL,
+//     credentials: true,
+//   })
+// );
 app.use(cookieParser());
 app.use(morgan("dev"));
 
