@@ -2,6 +2,8 @@ import Appointment from "../models/Appointment.js";
 import Doctor from "../models/Doctor.js";
 import sendEmail from "../utils/sendEmail.js";
 
+import { sendBookingConfirmation } from "../utils/emailService.js";
+
 // @desc    Book an appointment
 // @route   POST /api/appointments/book
 // @access  Private (Patients Only)
@@ -11,7 +13,7 @@ export const bookAppointment = async (req, res) => {
     const patientId = req.user._id;
 
     // Check if the doctor exists
-    const doctor = await Doctor.findById(doctorId);
+    const doctor = await Doctor.findById(doctorId).populate("user");
     if (!doctor) {
       return res.status(404).json({ message: "Doctor not found" });
     }
@@ -46,12 +48,18 @@ export const bookAppointment = async (req, res) => {
       status: "booked",
     });
 
+    const bookingDetails = {
+      userName: req.user.name,
+      doctorName: doctor.user.name,
+      specialty: doctor.specialty,
+      date,
+      time,
+      location: `${doctor.location.city}, ${doctor.location.state}`,
+    };
+    console.log(bookingDetails.doctorName);
+
     // Send Email Notification
-    await sendEmail(
-      req.user.email,
-      "Appointment Confirmation",
-      `Your appointment with Dr. ${doctor.user.name} is booked for ${date} at ${time}.`
-    );
+    await sendBookingConfirmation(req.user.email, bookingDetails);
 
     res
       .status(201)
