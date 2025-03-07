@@ -17,20 +17,21 @@ connectDB();
 // Initialize Express app
 const app = express();
 
-const corsOptions = {
-  origin: [
-    process.env.FRONTEND_URL,
-    "http://localhost:3000",
-    "http://localhost:5173",
-  ], // Allow both ports
-  credentials: true, // Allows cookies/auth headers
-};
+// const corsOptions = {
+//   origin: [
+//     process.env.FRONTEND_URL,
+//     "http://localhost:3000",
+//     "http://localhost:5173",
+//   ],
+//   credentials: true,
+// };
 
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
 // app.use(cors(corsOptions));
+
 app.use(
   cors({
     origin: "https://arogo-ai-nu.vercel.app",
@@ -38,6 +39,7 @@ app.use(
     credentials: true,
   })
 );
+
 app.use(cookieParser());
 app.use(morgan("dev"));
 
